@@ -191,7 +191,7 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="filters-container" style={{ borderRadius: 'var(--radius-md)', padding: '24px' }}>
+      <div className="filters-container" style={{ borderRadius: 'var(--radius-btn)', padding: '24px' }}>
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-end' }}>
           
           <div className="filter-item">

@@ -237,7 +237,7 @@ export default function ClothesTypePage() {
                 <div style={{ 
                   padding: '12px 16px', 
                   background: 'var(--clr-bg-alt)', 
-                  borderRadius: 'var(--radius-md)',
+                  borderRadius: 'var(--radius-btn)',
                   fontWeight: 600,
                   color: profit >= 0 ? 'var(--clr-success)' : 'var(--clr-danger)',
                   border: '1px dashed var(--clr-border)'
