@@ -22,6 +22,11 @@ export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   
+  // Filters state
+  const [filterMonth, setFilterMonth] = useState('');
+  const [filterStartDate, setFilterStartDate] = useState('');
+  const [filterEndDate, setFilterEndDate] = useState('');
+  
   // Custom dialog state
   const [confirmDelete, setConfirmDelete] = useState<{ isOpen: boolean; id: string; num: string }>({
     isOpen: false,
@@ -32,7 +37,12 @@ export default function OrdersPage() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const data = await getOrders();
+      const params: any = {};
+      if (filterMonth) params.month = filterMonth;
+      if (filterStartDate) params.startDate = filterStartDate;
+      if (filterEndDate) params.endDate = filterEndDate;
+      
+      const data = await getOrders(params);
       setOrders(data);
     } catch (err: any) {
       setError(err.message);
@@ -43,7 +53,14 @@ export default function OrdersPage() {
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [filterMonth, filterStartDate, filterEndDate]);
+
+  const resetFilters = () => {
+    setFilterMonth('');
+    setFilterStartDate('');
+    setFilterEndDate('');
+    setSearchTerm('');
+  };
 
   const filteredOrders = orders
     .filter((order) => 
@@ -174,9 +191,24 @@ export default function OrdersPage() {
     doc.save(fileName);
   };
 
+  const months = [
+    { value: '1', label: 'Januari' },
+    { value: '2', label: 'Februari' },
+    { value: '3', label: 'Maret' },
+    { value: '4', label: 'April' },
+    { value: '5', label: 'Mei' },
+    { value: '6', label: 'Juni' },
+    { value: '7', label: 'Juli' },
+    { value: '8', label: 'Agustus' },
+    { value: '9', label: 'September' },
+    { value: '10', label: 'Oktober' },
+    { value: '11', label: 'November' },
+    { value: '12', label: 'Desember' },
+  ];
+
   return (
     <div className="dashboard-page">
-      <div className="page-header" style={{ marginBottom: 0 }}>
+      <div className="page-header" style={{ marginBottom: 20 }}>
         <div>
           <h1 className="page-title">Daftar Order</h1>
           <p className="page-subtitle">Kelola semua order masuk — total {orders.length} order</p>
@@ -190,29 +222,95 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
-          <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
-            <input
-              type="text"
-              placeholder="Cari nama pelanggan..."
+      <div className="filters-bar" style={{ 
+        background: '#fff', 
+        padding: 20, 
+        borderRadius: 'var(--radius-md)', 
+        border: '1px solid var(--clr-border)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+        marginBottom: 24
+      }}>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <div className="form-group" style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🔍 Cari Pelanggan</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
+              <input
+                type="text"
+                placeholder="Nama pelanggan..."
+                className="form-control"
+                style={{ paddingLeft: 40, width: '100%' }}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-group" style={{ width: 180, marginBottom: 0 }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>📅 Pilih Bulan</label>
+            <select 
               className="form-control"
-              style={{ paddingLeft: 40, width: '100%', maxWidth: 400 }}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={filterMonth}
+              onChange={(e) => {
+                setFilterMonth(e.target.value);
+                setFilterStartDate('');
+                setFilterEndDate('');
+              }}
+            >
+              <option value="">Semua Bulan</option>
+              {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+            </select>
+          </div>
+
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+            title="Urutkan Tanggal"
+            style={{ height: 46, display: 'flex', gap: 8, borderRadius: 'var(--radius-sm)', whiteSpace: 'nowrap' }}
+          >
+            <span>📅</span>
+            {sortOrder === 'desc' ? 'Terbaru' : 'Terlama'}
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end', paddingTop: 12, borderTop: '1px solid #F0F0F0' }}>
+          <div className="form-group" style={{ width: 160, marginBottom: 0 }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🗓️ Dari Tanggal</label>
+            <input 
+              type="date" 
+              className="form-control" 
+              value={filterStartDate}
+              onChange={(e) => {
+                setFilterStartDate(e.target.value);
+                setFilterMonth('');
+              }}
             />
           </div>
+          <div className="form-group" style={{ width: 160, marginBottom: 0 }}>
+            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🗓️ Sampai Tanggal</label>
+            <input 
+              type="date" 
+              className="form-control"
+              value={filterEndDate}
+              onChange={(e) => {
+                setFilterEndDate(e.target.value);
+                setFilterMonth('');
+              }}
+            />
+          </div>
+          
+          {(filterMonth || filterStartDate || filterEndDate || searchTerm) && (
+            <button 
+              className="link-btn" 
+              onClick={resetFilters}
+              style={{ fontSize: '0.85rem', color: 'var(--clr-danger)', marginBottom: 12 }}
+            >
+              ✕ Reset Filter
+            </button>
+          )}
         </div>
-        <button 
-          className="btn btn-secondary" 
-          onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-          title="Urutkan Tanggal"
-          style={{ height: 46, display: 'flex', gap: 8, borderRadius: 'var(--radius-sm)' }}
-        >
-          <span>📅</span>
-          {sortOrder === 'desc' ? 'Terbaru' : 'Terlama'}
-        </button>
       </div>
 
       <div className="chart-card" style={{ overflow: 'auto' }}>

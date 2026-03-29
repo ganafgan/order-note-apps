@@ -104,11 +104,38 @@ export const createOrder = async (req: AuthRequest, res: Response) => {
 // GET /api/orders
 export const getOrders = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.user!.id;
+    const { month, year, startDate, endDate } = req.query;
+
+    const where: any = { userId };
+
+    if (startDate && endDate) {
+      // Filter by custom date range
+      where.createdAt = {
+        [Op.between]: [
+          new Date(startDate as string),
+          new Date(new Date(endDate as string).setHours(23, 59, 59, 999))
+        ]
+      };
+    } else if (month) {
+      // Filter by specific month
+      const filterYear = year ? parseInt(year as string) : new Date().getFullYear();
+      const filterMonth = parseInt(month as string) - 1; // 0-indexed for JS Date
+      
+      const startOfMonth = new Date(filterYear, filterMonth, 1);
+      const endOfMonth = new Date(filterYear, filterMonth + 1, 0, 23, 59, 59, 999);
+      
+      where.createdAt = {
+        [Op.between]: [startOfMonth, endOfMonth]
+      };
+    }
+
     const orders = await Order.findAll({
-      where: { userId: req.user!.id },
+      where,
       include: [{ model: OrderItem, as: 'items' }],
       order: [['createdAt', 'DESC']],
     });
+    
     return res.status(200).json(orders);
   } catch (error) {
     console.error('Get orders error:', error);

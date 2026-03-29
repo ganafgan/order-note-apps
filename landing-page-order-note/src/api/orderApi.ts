@@ -58,8 +58,23 @@ export async function createOrder(data: {
   return json;
 }
 
-export async function getOrders(): Promise<OrderItem[]> {
-  const res = await fetch(`${API_BASE}/orders`, { headers: getHeaders() });
+export async function getOrders(params?: { 
+  month?: string; 
+  year?: string; 
+  startDate?: string; 
+  endDate?: string; 
+}): Promise<OrderItem[]> {
+  let url = `${API_BASE}/orders`;
+  if (params) {
+    const query = new URLSearchParams();
+    if (params.month) query.append('month', params.month);
+    if (params.year) query.append('year', params.year);
+    if (params.startDate) query.append('startDate', params.startDate);
+    if (params.endDate) query.append('endDate', params.endDate);
+    if (query.toString()) url += `?${query.toString()}`;
+  }
+  
+  const res = await fetch(url, { headers: getHeaders() });
   const json = await res.json();
   if (!res.ok) throw new Error(json.message || 'Gagal mengambil data order.');
   return json;
