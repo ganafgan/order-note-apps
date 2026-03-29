@@ -191,7 +191,7 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="filters-container" style={{ borderRadius: 'var(--radius-lg)', padding: '20px' }}>
+      <div className="filters-container" style={{ borderRadius: 'var(--radius-md)', padding: '20px' }}>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between' }}>
           
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', flex: 1 }}>
@@ -202,8 +202,8 @@ export default function OrdersPage() {
                 <input
                   type="text"
                   placeholder="Ketik nama pelanggan..."
-                  className="form-control hover-border"
-                  style={{ borderRadius: 'var(--radius-md)' }}
+                  className="form-control"
+                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -215,8 +215,8 @@ export default function OrdersPage() {
               <div className="filter-input-wrapper">
                 <span className="filter-icon">🗓️</span>
                 <select 
-                  className="form-control hover-border"
-                  style={{ borderRadius: 'var(--radius-md)' }}
+                  className="form-control"
+                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={filterMonth}
                   onChange={(e) => {
                     setFilterMonth(e.target.value);
@@ -261,8 +261,8 @@ export default function OrdersPage() {
                 <span className="filter-icon">📅</span>
                 <input 
                   type="date" 
-                  className="form-control hover-border" 
-                  style={{ borderRadius: 'var(--radius-md)' }}
+                  className="form-control" 
+                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={filterStartDate}
                   onChange={(e) => {
                     setFilterStartDate(e.target.value);
@@ -277,8 +277,8 @@ export default function OrdersPage() {
                 <span className="filter-icon">📅</span>
                 <input 
                   type="date" 
-                  className="form-control hover-border"
-                  style={{ borderRadius: 'var(--radius-md)' }}
+                  className="form-control"
+                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={filterEndDate}
                   onChange={(e) => {
                     setFilterEndDate(e.target.value);

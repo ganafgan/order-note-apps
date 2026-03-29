@@ -775,7 +775,6 @@ ul {
 .form-group input:focus {
     outline: none;
     border-color: var(--clr-primary);
-    box-shadow: 0 0 0 3px var(--clr-secondary);
 }
 
 .input-error {
