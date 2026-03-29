@@ -1551,9 +1551,133 @@ ul {
   cursor: default;
 }
 
-/* ==========================================================================
-   Order Form Layout & Components
-   ========================================================================== */
+/* Orders Filter Bar Redesign */
+.filters-container {
+  background-color: #fff;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background-color: var(--clr-bg-alt);
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.filters-header-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--clr-text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.filters-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filter-group-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-item {
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-item.small {
+  flex: 0 0 180px;
+}
+
+.filter-item.medium {
+  flex: 0 0 240px;
+}
+
+.filter-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--clr-text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.filter-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--clr-text-muted);
+  opacity: 0.6;
+  pointer-events: none;
+  font-size: 0.9rem;
+}
+
+.filter-input-wrapper .form-control {
+  padding-left: 36px !important;
+  height: 44px;
+  border-color: var(--clr-border);
+  font-size: 0.9rem;
+}
+
+.filter-input-wrapper select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236B7280' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.filters-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  background-color: var(--clr-bg-alt);
+  border-top: 1px solid var(--clr-border);
+}
+
+.filter-tag {
+  background-color: var(--clr-secondary);
+  color: var(--clr-primary);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-tag button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
 .order-form-layout {
   display: grid;
   grid-template-columns: 1fr 340px;

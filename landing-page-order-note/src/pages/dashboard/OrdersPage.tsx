@@ -51,6 +51,8 @@ export default function OrdersPage() {
     }
   };
 
+  const [showAdvanced, setShowAdvanced] = useState(false);
+
   useEffect(() => {
     fetchOrders();
   }, [filterMonth, filterStartDate, filterEndDate]);
@@ -90,81 +92,61 @@ export default function OrdersPage() {
     const fileName = `${order.customerName}-${order.orderNumber}.pdf`;
 
     // --- 1. Branding Header ---
-    // Background for header
-    doc.setFillColor(99, 103, 255); // NoteOrder Primary Indigo (#6367FF)
+    doc.setFillColor(99, 103, 255);
     doc.rect(0, 0, 210, 40, 'F');
-    
-    // Logo Text
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(28);
     doc.setFont('helvetica', 'bold');
     doc.text('NoteOrder.', 15, 26);
-    
-    // Document Title
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('DETAIL PESANAN PELANGGAN', 155, 25);
     doc.text(`${order.orderNumber}`, 155, 31);
 
     // --- 2. Watermark ---
-    doc.setTextColor(245, 245, 245); // Extremely subtle gray
+    doc.setTextColor(245, 245, 245);
     doc.setFontSize(80);
     doc.setFont('helvetica', 'bold');
     doc.text('NoteOrder.', 35, 160, { angle: 45 });
     
-    // --- 3. Body Content ---
     let currentY = 55;
-    
-    // Section: Customer
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.text('DIPESAN OLEH:', 15, currentY);
-    
     currentY += 8;
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(14);
     doc.text(order.customerName, 15, currentY);
-    
     currentY += 15;
     
-    // Section: Items
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(9);
     doc.text('DAFTAR PESANAN:', 15, currentY);
-    
     currentY += 10;
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
     
     order.items.forEach((item) => {
-      // Use standard character or circle for bullets
       const itemLine = `• ${item.clothType}${item.color ? ' - ' + item.color : ''} - ${item.size}`;
       const qtyLine = `${item.quantity} pcs`;
-      
       doc.text(itemLine, 20, currentY);
       doc.text(qtyLine, 180, currentY, { align: 'right' });
-      
       currentY += 8;
     });
 
     currentY += 15;
-    
-    // Section: Address & Contact
     doc.setTextColor(100, 100, 100);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.text('ALAMAT PENGIRIMAN:', 15, currentY);
-    
     currentY += 8;
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'normal');
-    
     const splitAddress = doc.splitTextToSize(order.address, 180);
     doc.text(splitAddress, 15, currentY);
-    
     const addressHeight = splitAddress.length * 6;
     currentY += addressHeight + 12;
 
@@ -172,43 +154,34 @@ export default function OrdersPage() {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.text('NOMOR TELEPON:', 15, currentY);
-    
     currentY += 7;
     doc.setTextColor(40, 40, 40);
     doc.setFontSize(12);
     doc.text(order.phoneNumber, 15, currentY);
 
-    // --- 4. Footer ---
     doc.setDrawColor(230, 230, 230);
     doc.line(15, 280, 195, 280);
-    
     doc.setTextColor(150, 150, 150);
     doc.setFontSize(8);
     doc.text('Catatan: Dokumen ini dihasilkan secara otomatis oleh sistem NoteOrder.', 15, 287);
     doc.text(`Waktu Cetak: ${new Date().toLocaleString('id-ID')}`, 195, 287, { align: 'right' });
-
-    // 5. Save
     doc.save(fileName);
   };
 
   const months = [
-    { value: '1', label: 'Januari' },
-    { value: '2', label: 'Februari' },
-    { value: '3', label: 'Maret' },
-    { value: '4', label: 'April' },
-    { value: '5', label: 'Mei' },
-    { value: '6', label: 'Juni' },
-    { value: '7', label: 'Juli' },
-    { value: '8', label: 'Agustus' },
-    { value: '9', label: 'September' },
-    { value: '10', label: 'Oktober' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'Desember' },
+    { value: '1', label: 'Januari' }, { value: '2', label: 'Februari' },
+    { value: '3', label: 'Maret' }, { value: '4', label: 'April' },
+    { value: '5', label: 'Mei' }, { value: '6', label: 'Juni' },
+    { value: '7', label: 'Juli' }, { value: '8', label: 'Agustus' },
+    { value: '9', label: 'September' }, { value: '10', label: 'Oktober' },
+    { value: '11', label: 'November' }, { value: '12', label: 'Desember' },
   ];
+
+  const activeFiltersCount = [filterMonth, filterStartDate, filterEndDate, searchTerm].filter(Boolean).length;
 
   return (
     <div className="dashboard-page">
-      <div className="page-header" style={{ marginBottom: 20 }}>
+      <div className="page-header" style={{ marginBottom: 28 }}>
         <div>
           <h1 className="page-title">Daftar Order</h1>
           <p className="page-subtitle">Kelola semua order masuk — total {orders.length} order</p>
@@ -217,98 +190,111 @@ export default function OrdersPage() {
           className="btn btn-primary"
           onClick={() => navigate('/dashboard/orders/new')}
           id="btn-new-order"
+          style={{ boxShadow: '0 4px 12px rgba(99, 103, 255, 0.25)' }}
         >
           + Buat Order Baru
         </button>
       </div>
 
-      <div className="filters-bar" style={{ 
-        background: '#fff', 
-        padding: 20, 
-        borderRadius: 'var(--radius-md)', 
-        border: '1px solid var(--clr-border)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-        marginBottom: 24
-      }}>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-          <div className="form-group" style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🔍 Cari Pelanggan</label>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
-              <input
-                type="text"
-                placeholder="Nama pelanggan..."
-                className="form-control"
-                style={{ paddingLeft: 40, width: '100%' }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+      <div className="filters-container">
+        <div className="filters-header">
+          <span className="filters-header-title">🔍 Filter & Pencarian</span>
+          {activeFiltersCount > 0 && (
+            <div className="filter-tag">
+              {activeFiltersCount} Filter Aktif
+              <button onClick={resetFilters} title="Reset">✕</button>
             </div>
-          </div>
-
-          <div className="form-group" style={{ width: 180, marginBottom: 0 }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>📅 Pilih Bulan</label>
-            <select 
-              className="form-control"
-              value={filterMonth}
-              onChange={(e) => {
-                setFilterMonth(e.target.value);
-                setFilterStartDate('');
-                setFilterEndDate('');
-              }}
-            >
-              <option value="">Semua Bulan</option>
-              {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-            </select>
-          </div>
-
+          )}
           <button 
-            className="btn btn-secondary" 
-            onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-            title="Urutkan Tanggal"
-            style={{ height: 46, display: 'flex', gap: 8, borderRadius: 'var(--radius-sm)', whiteSpace: 'nowrap' }}
+            className="link-btn" 
+            style={{ fontSize: '0.8rem', color: 'var(--clr-primary)', fontWeight: 600 }}
+            onClick={() => setShowAdvanced(!showAdvanced)}
           >
-            <span>📅</span>
-            {sortOrder === 'desc' ? 'Terbaru' : 'Terlama'}
+            {showAdvanced ? '⬆️ Sembunyikan Filter' : '⚙️ Filter Lanjutan'}
           </button>
         </div>
 
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end', paddingTop: 12, borderTop: '1px solid #F0F0F0' }}>
-          <div className="form-group" style={{ width: 160, marginBottom: 0 }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🗓️ Dari Tanggal</label>
-            <input 
-              type="date" 
-              className="form-control" 
-              value={filterStartDate}
-              onChange={(e) => {
-                setFilterStartDate(e.target.value);
-                setFilterMonth('');
-              }}
-            />
-          </div>
-          <div className="form-group" style={{ width: 160, marginBottom: 0 }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--clr-text-muted)', marginBottom: 4, display: 'block' }}>🗓️ Sampai Tanggal</label>
-            <input 
-              type="date" 
-              className="form-control"
-              value={filterEndDate}
-              onChange={(e) => {
-                setFilterEndDate(e.target.value);
-                setFilterMonth('');
-              }}
-            />
-          </div>
-          
-          {(filterMonth || filterStartDate || filterEndDate || searchTerm) && (
+        <div className="filters-body">
+          <div className="filter-group-row">
+            <div className="filter-item">
+              <label className="filter-label">Cari Pelanggan</label>
+              <div className="filter-input-wrapper">
+                <span className="filter-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Ketik nama pelanggan..."
+                  className="form-control"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="filter-item medium">
+              <label className="filter-label">Pilih Bulan</label>
+              <div className="filter-input-wrapper">
+                <span className="filter-icon">🗓️</span>
+                <select 
+                  className="form-control"
+                  value={filterMonth}
+                  onChange={(e) => {
+                    setFilterMonth(e.target.value);
+                    setFilterStartDate('');
+                    setFilterEndDate('');
+                  }}
+                >
+                  <option value="">Semua Bulan</option>
+                  {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+                </select>
+              </div>
+            </div>
+
             <button 
-              className="link-btn" 
-              onClick={resetFilters}
-              style={{ fontSize: '0.85rem', color: 'var(--clr-danger)', marginBottom: 12 }}
+              className="btn btn-secondary" 
+              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
+              style={{ height: 44, padding: '0 20px', borderRadius: 'var(--radius-sm)', display: 'flex', gap: 10, alignItems: 'center' }}
             >
-              ✕ Reset Filter
+              <span style={{ fontSize: '1.1rem' }}>{sortOrder === 'desc' ? '🔽' : '🔼'}</span>
+              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{sortOrder === 'desc' ? 'Terbaru' : 'Terlama'}</span>
             </button>
+          </div>
+
+          {showAdvanced && (
+            <div className="filter-group-row" style={{ paddingTop: 20, borderTop: '1px solid var(--clr-bg-alt)' }}>
+              <div className="filter-item small">
+                <label className="filter-label">Dari Tanggal</label>
+                <div className="filter-input-wrapper">
+                  <span className="filter-icon">📅</span>
+                  <input 
+                    type="date" 
+                    className="form-control" 
+                    value={filterStartDate}
+                    onChange={(e) => {
+                      setFilterStartDate(e.target.value);
+                      setFilterMonth('');
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="filter-item small">
+                <label className="filter-label">Sampai Tanggal</label>
+                <div className="filter-input-wrapper">
+                  <span className="filter-icon">📅</span>
+                  <input 
+                    type="date" 
+                    className="form-control"
+                    value={filterEndDate}
+                    onChange={(e) => {
+                      setFilterEndDate(e.target.value);
+                      setFilterMonth('');
+                    }}
+                  />
+                </div>
+              </div>
+              <p style={{ fontSize: '0.75rem', color: 'var(--clr-text-muted)', marginBottom: 12, fontStyle: 'italic' }}>
+                * Filter rentang tanggal akan mengabaikan filter bulan.
+              </p>
+            </div>
           )}
         </div>
       </div>
