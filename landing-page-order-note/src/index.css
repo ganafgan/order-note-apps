@@ -1,7 +1,11 @@
 /* ==========================================================================
    CSS Variables (Warm, Elegant, Simple Aesthetics)
    ========================================================================== */
-   :root {
+   @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
     /* Color Palette - New Indigo Theme */
     --clr-bg-main: #FAFAFF; 
     --clr-bg-alt: #F0F2FF; 
@@ -1161,6 +1165,14 @@ ul {
   display: flex;
   align-items: center;
 }
+
+.sidebar-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+
+
 
 .sidebar-icon svg {
   width: 18px;

@@ -136,7 +136,7 @@ export default function ClothesTypePage() {
             <p>Belum ada data jenis pakaian. Klik "+ Tambah Jenis" untuk memulai.</p>
           </div>
         ) : (
-          <div className="table-responsive">
+          <div className="w-full overflow-x-auto">
             <table className="orders-table">
               <thead>
                 <tr>
@@ -209,7 +209,7 @@ export default function ClothesTypePage() {
                 {formik.touched.name && formik.errors.name && <div className="error-text">{formik.errors.name}</div>}
               </div>
 
-              <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="form-group">
                   <label>Harga Dasar (Rp)</label>
                   <input 
