@@ -1264,18 +1264,32 @@ ul {
     to { opacity: 1; }
   }
 
-  /* Dashboard responsive */
+  /* ---- Dashboard ---- */
   .stats-grid {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 1.4rem;
   }
 
   .charts-row {
     flex-direction: column;
   }
 
+  .charts-row .chart-card {
+    flex: none !important;
+    width: 100% !important;
+  }
+
   .dashboard-page {
     padding: 16px;
+    gap: 16px;
   }
 
   .page-header {
@@ -1283,11 +1297,79 @@ ul {
     align-items: flex-start;
     gap: 12px;
   }
+
+  .page-header-actions {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ---- New Order Page ---- */
+  .order-form-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .order-summary-panel {
+    width: 100% !important;
+    position: static !important;
+  }
+
+  /* Item picker: Ukuran, Warna, Qty - stack vertically */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Order items table: allow horizontal scroll */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    min-height: 46px;
+    font-size: 0.95rem;
+  }
+
+  /* ---- Jenis Pakaian Modal ---- */
+  .dialog-box {
+    width: 95vw !important;
+    max-width: 95vw !important;
+    margin: 0 auto;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* ---- Table Responsive ---- */
+  .table-responsive, .orders-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 @media (max-width: 480px) {
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .page-title {
+    font-size: 1.4rem;
+  }
+
+  /* Tighter button */
+  .btn-full {
+    width: 100%;
   }
 }
 
