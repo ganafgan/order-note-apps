@@ -1,19 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  PieChart, Pie, Cell, Tooltip, Legend,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer,
+  Tooltip,
+  XAxis, YAxis, CartesianGrid, ResponsiveContainer,
   AreaChart, Area,
 } from 'recharts';
 import { getOrderStats } from '../../api/orderApi';
 import type { OrderStats, OrderItem } from '../../api/orderApi';
-
-const STATUS_COLORS: Record<string, string> = {
-  Selesai: '#8CB3A1',
-  Diproses: '#F0A3B5',
-  Menunggu: '#F4C494',
-  Dibatalkan: '#E28787',
-};
 
 const STATUS_BADGE: Record<string, string> = {
   completed: 'success',
@@ -89,12 +82,6 @@ export default function DashboardPage() {
   }
 
   const revenueMillions = (stats.totalAmount / 1000000).toFixed(1);
-  
-  // Transform statusCounts to breakdown array for Recharts
-  const statusBreakdown = Object.keys(stats.statusCounts).map(key => ({
-    name: STATUS_LABEL[key] || key,
-    value: stats.statusCounts[key]
-  })).filter(s => s.value > 0);
 
   return (
     <div className="dashboard-page">
@@ -179,61 +166,52 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Charts Row: Pie + Bar */}
-      <div className="charts-row">
-        {/* Pie / Donut */}
-        <div className="chart-card" style={{ flex: '0 0 340px' }}>
-          <h3 className="chart-title">Status Order</h3>
-          <p className="chart-subtitle">Distribusi status semua order</p>
-          {statusBreakdown.length === 0 ? (
-            <div className="empty-state" style={{ padding: '40px 0' }}>
-              <span>📊</span><p>Belum ada data</p>
-            </div>
-          ) : (
-            <ResponsiveContainer width="100%" height={260}>
-              <PieChart>
-                <Pie
-                  data={statusBreakdown}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={65}
-                  outerRadius={100}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
-                  {statusBreakdown.map((_entry, index) => (
-                    <Cell key={`cell-${index}`} fill={STATUS_COLORS[statusBreakdown[index].name] || '#ccc'} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(val) => [`${val} order`, '']} />
-                <Legend iconType="circle" iconSize={10} />
-              </PieChart>
-            </ResponsiveContainer>
-          )}
+      {/* Monthly Trend Chart (Replaces Status & Summary) */}
+      <div className="chart-card">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+          <div>
+            <h3 className="chart-title">Tren Order Bulanan</h3>
+            <p className="chart-subtitle">Jumlah pesanan yang masuk setiap bulan di tahun {new Date().getFullYear()}</p>
+          </div>
+          <div className="stat-change positive" style={{ fontSize: '0.9rem', padding: '4px 12px' }}>
+            Total Tahun Ini: {stats.monthlyStats.reduce((sum, m) => sum + m.count, 0)} Order
+          </div>
         </div>
-
-        {/* Bar: orders by status */}
-        <div className="chart-card" style={{ flex: 1 }}>
-          <h3 className="chart-title">Ringkasan Order</h3>
-          <p className="chart-subtitle">Jumlah order berdasarkan status</p>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart
-              data={[
-                { label: 'Menunggu', count: stats.statusCounts.pending || 0 },
-                { label: 'Diproses', count: stats.statusCounts.processing || 0 },
-                { label: 'Selesai', count: stats.statusCounts.completed || 0 },
-                { label: 'Dibatalkan', count: stats.statusCounts.cancelled || 0 },
-              ]}
-              barSize={36}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#F0EDE8" />
-              <XAxis dataKey="label" tick={{ fill: '#8E787C', fontSize: 13 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: '#8E787C', fontSize: 13 }} axisLine={false} tickLine={false} allowDecimals={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" name="Order" fill="#F0A3B5" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <ResponsiveContainer width="100%" height={300}>
+          <AreaChart data={stats.monthlyStats} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <linearGradient id="trendGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--clr-primary)" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="var(--clr-primary)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F0EDE8" vertical={false} />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fill: '#8E787C', fontSize: 12 }} 
+              axisLine={false} 
+              tickLine={false} 
+              dy={10}
+            />
+            <YAxis 
+              tick={{ fill: '#8E787C', fontSize: 12 }} 
+              axisLine={false} 
+              tickLine={false} 
+              allowDecimals={false}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area 
+              type="monotone" 
+              dataKey="count" 
+              name="Jumlah Order" 
+              stroke="var(--clr-primary)" 
+              strokeWidth={3}
+              fill="url(#trendGradient)"
+              dot={{ r: 4, fill: 'var(--clr-primary)', strokeWidth: 2, stroke: '#fff' }}
+              activeDot={{ r: 6, strokeWidth: 0 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
 
       {/* Area chart: recent 5 order trend (value) */}

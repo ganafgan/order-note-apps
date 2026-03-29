@@ -39,6 +39,7 @@ export interface OrderStats {
   totalCustomers: number;
   statusCounts: Record<string, number>;
   recentOrders: OrderItem[];
+  monthlyStats: Array<{ name: string; count: number }>;
 }
 
 export async function createOrder(data: {

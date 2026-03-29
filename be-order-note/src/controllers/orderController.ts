@@ -140,14 +140,29 @@ export const getOrderStats = async (req: AuthRequest, res: Response) => {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, 5);
 
-    // Calculate total profit
+    // Calculate total profit and monthly order counts for the current year
+    const currentYear = new Date().getFullYear();
+    const monthlyOrderCounts = new Array(12).fill(0);
+
     const totalProfit = orders.reduce((sum, o) => {
+      // Monthly count for current year
+      const orderDate = new Date(o.createdAt);
+      if (orderDate.getFullYear() === currentYear) {
+        monthlyOrderCounts[orderDate.getMonth()]++;
+      }
+
       const orderProfit = o.items?.reduce((pSum, item) => {
         const profitPerUnit = Number(item.price) - Number(item.basePrice);
         return pSum + (profitPerUnit * item.quantity);
       }, 0) || 0;
       return sum + orderProfit;
     }, 0);
+
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const monthlyStats = monthNames.map((name, index) => ({
+      name,
+      count: monthlyOrderCounts[index]
+    }));
 
     return res.status(200).json({
       totalOrders,
@@ -156,6 +171,7 @@ export const getOrderStats = async (req: AuthRequest, res: Response) => {
       totalCustomers: new Set(orders.map(o => o.customerName)).size,
       statusCounts,
       recentOrders,
+      monthlyStats,
     });
   } catch (error) {
     console.error('Get order stats error:', error);
