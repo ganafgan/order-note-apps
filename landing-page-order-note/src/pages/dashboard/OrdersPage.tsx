@@ -185,76 +185,72 @@ export default function OrdersPage() {
           className="btn btn-primary"
           onClick={() => navigate('/dashboard/orders/new')}
           id="btn-new-order"
-          style={{ boxShadow: '0 4px 12px rgba(99, 103, 255, 0.25)' }}
+          style={{ boxShadow: '0 4px 12px rgba(99, 103, 255, 0.2) ' }}
         >
           + Buat Order Baru
         </button>
       </div>
 
-      <div className="filters-container" style={{ borderRadius: 'var(--radius-md)', padding: '20px' }}>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+      <div className="filters-container" style={{ borderRadius: 'var(--radius-md)', padding: '24px' }}>
+        <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-end' }}>
           
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', flex: 1 }}>
-            <div className="filter-item">
-              <label className="filter-label">Cari Pelanggan</label>
-              <div className="filter-input-wrapper">
-                <span className="filter-icon">🔍</span>
-                <input
-                  type="text"
-                  placeholder="Ketik nama pelanggan..."
-                  className="form-control"
-                  style={{ borderRadius: 'var(--radius-sm)' }}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+          <div className="filter-item">
+            <label className="filter-label">Cari Pelanggan</label>
+            <div className="filter-input-wrapper">
+              <span className="filter-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Ketik nama pelanggan..."
+                className="form-control"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
+          </div>
 
-            <div className="filter-item small">
-              <label className="filter-label">Bulan</label>
-              <div className="filter-input-wrapper">
-                <span className="filter-icon">🗓️</span>
-                <select 
-                  className="form-control"
-                  style={{ borderRadius: 'var(--radius-sm)' }}
-                  value={filterMonth}
-                  onChange={(e) => {
-                    setFilterMonth(e.target.value);
-                    setFilterStartDate('');
-                    setFilterEndDate('');
-                  }}
-                >
-                  <option value="">Semua</option>
-                  {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
-                </select>
-              </div>
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12 }}>
-              <button 
-                className="btn btn-secondary" 
-                style={{ height: 44, borderRadius: 'var(--radius-md)', padding: '0 16px', display: 'flex', alignItems: 'center', gap: 8 }}
-                onClick={() => setShowAdvanced(!showAdvanced)}
+          <div className="filter-item small">
+            <label className="filter-label">Bulan</label>
+            <div className="filter-input-wrapper">
+              <span className="filter-icon">🗓️</span>
+              <select 
+                className="form-control"
+                value={filterMonth}
+                onChange={(e) => {
+                  setFilterMonth(e.target.value);
+                  setFilterStartDate('');
+                  setFilterEndDate('');
+                }}
               >
-                <span>{showAdvanced ? '⬆️' : '⚙️'}</span>
-                {showAdvanced ? 'Tutup Rentang' : 'Rentang Waktu'}
-              </button>
-              
-              {activeFiltersCount > 0 && (
-                <button 
-                  className="link-btn"
-                  style={{ height: 44, color: 'var(--clr-danger)', fontWeight: 600, fontSize: '0.85rem' }}
-                  onClick={resetFilters}
-                >
-                  ✕ Reset
-                </button>
-              )}
+                <option value="">Semua</option>
+                {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
+              </select>
             </div>
+          </div>
+          
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button 
+              className="btn btn-secondary" 
+              style={{ height: 48, padding: '0 20px', display: 'flex', alignItems: 'center', gap: 8, fontWeight: 600 }}
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
+              <span>{showAdvanced ? '⬆️' : '⚙️'}</span>
+              {showAdvanced ? 'Tutup Rentang' : 'Rentang Waktu'}
+            </button>
+            
+            {activeFiltersCount > 0 && (
+              <button 
+                className="btn"
+                style={{ height: 48, color: 'var(--clr-danger)', fontWeight: 600, fontSize: '0.9rem', background: 'transparent', border: 'none' }}
+                onClick={resetFilters}
+              >
+                ✕ Reset
+              </button>
+            )}
           </div>
         </div>
 
         {showAdvanced && (
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 16, paddingTop: 16, borderTop: '1px dashed var(--clr-border)' }}>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginTop: 20, paddingTop: 20, borderTop: '1px dashed var(--clr-border)' }}>
             <div className="filter-item small">
               <label className="filter-label">Dari Tanggal</label>
               <div className="filter-input-wrapper">
@@ -262,7 +258,6 @@ export default function OrdersPage() {
                 <input 
                   type="date" 
                   className="form-control" 
-                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={filterStartDate}
                   onChange={(e) => {
                     setFilterStartDate(e.target.value);
@@ -278,7 +273,6 @@ export default function OrdersPage() {
                 <input 
                   type="date" 
                   className="form-control"
-                  style={{ borderRadius: 'var(--radius-sm)' }}
                   value={filterEndDate}
                   onChange={(e) => {
                     setFilterEndDate(e.target.value);

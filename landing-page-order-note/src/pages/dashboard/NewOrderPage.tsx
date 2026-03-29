@@ -257,12 +257,12 @@ export default function NewOrderPage() {
 
             <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
               Daftar Pesanan Saat Ini 
-              <span style={{ fontSize: '0.8rem', background: 'var(--clr-secondary)', color: 'var(--clr-primary)', padding: '2px 8px', borderRadius: 6 }}>
+              <span style={{ fontSize: '0.8rem', background: 'var(--clr-secondary)', color: 'var(--clr-primary)', padding: '2px 8px', borderRadius: 'var(--radius-sm)' }}>
                 {formik.values.items.length} Item
               </span>
             </h4>
             
-            <div className="table-wrapper" style={{ border: '1px solid var(--clr-border)', borderRadius: 12, overflow: 'hidden' }}>
+            <div className="table-wrapper" style={{ border: '1px solid var(--clr-border)', borderRadius: 'var(--radius-md)', overflow: 'hidden' }}>
               <table className="orders-table" style={{ margin: 0 }}>
                 <thead>
                   <tr style={{ background: 'var(--clr-bg-alt)' }}>
