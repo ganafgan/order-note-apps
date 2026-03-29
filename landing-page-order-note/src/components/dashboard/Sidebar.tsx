@@ -154,11 +154,11 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
-      <aside className={`sidebar md:relative fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="flex md:hidden justify-between items-center px-5 py-4 border-b border-[var(--clr-border)] mb-3 bg-[var(--clr-bg-main)]">
-          <span className="app-navbar-logo text-xl">NoteOrder.</span>
-          <button className="bg-transparent border-none cursor-pointer flex items-center justify-center p-1 text-[var(--clr-text-muted)]" onClick={onClose} aria-label="Close menu">
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
+        <div className="sidebar-header-mobile">
+          <span className="app-navbar-logo" style={{fontSize: '1.25rem'}}>NoteOrder.</span>
+          <button className="close-sidebar-btn" onClick={onClose} aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
@@ -187,7 +187,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         ))}
       </nav>
     </aside>
-    {isOpen && <div className="fixed inset-0 bg-black/50 z-[49] md:hidden animate-[fadeIn_0.3s_ease]" onClick={onClose} />}
+    {isOpen && <div className="sidebar-backdrop" onClick={onClose} />}
     </>
   );
 }

@@ -199,7 +199,7 @@ export default function NewOrderPage() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="form-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 100px', gap: 24, marginBottom: 24 }}>
                 <div className="form-group">
                   <label>Pilih Ukuran</label>
                   <div className="size-options">

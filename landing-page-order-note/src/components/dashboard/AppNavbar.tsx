@@ -37,18 +37,18 @@ export default function AppNavbar({ onToggleSidebar }: AppNavbarProps) {
     <header className="app-navbar">
       <div className="app-navbar-left">
         <button 
-          className="md:hidden flex items-center justify-center p-2 mr-3 bg-transparent border-none text-[var(--clr-text-main)] cursor-pointer" 
+          className="mobile-menu-btn" 
           onClick={onToggleSidebar}
           aria-label="Toggle menu"
         >
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="3" y1="12" x2="21" y2="12" />
             <line x1="3" y1="6" x2="21" y2="6" />
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
         <span className="app-navbar-logo">NoteOrder.</span>
-        <div className="app-navbar-welcome hidden md:block">
+        <div className="app-navbar-welcome">
           <span className="welcome-text">Welcome back,</span>
           <span className="welcome-name">{user.fullname}</span>
         </div>

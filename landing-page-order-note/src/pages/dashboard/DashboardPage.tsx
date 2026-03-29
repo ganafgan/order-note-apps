@@ -121,7 +121,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon" style={{ background: 'rgba(240,163,181,0.15)', color: 'var(--clr-primary)' }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -180,9 +180,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts Row: Pie + Bar */}
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div className="charts-row">
         {/* Pie / Donut */}
-        <div className="chart-card w-full lg:w-[340px] shrink-0">
+        <div className="chart-card" style={{ flex: '0 0 340px' }}>
           <h3 className="chart-title">Status Order</h3>
           <p className="chart-subtitle">Distribusi status semua order</p>
           {statusBreakdown.length === 0 ? (
@@ -213,7 +213,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Bar: orders by status */}
-        <div className="chart-card flex-1 w-full lg:w-auto">
+        <div className="chart-card" style={{ flex: 1 }}>
           <h3 className="chart-title">Ringkasan Order</h3>
           <p className="chart-subtitle">Jumlah order berdasarkan status</p>
           <ResponsiveContainer width="100%" height={260}>

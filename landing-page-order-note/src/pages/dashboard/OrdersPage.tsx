@@ -190,7 +190,7 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
           <div style={{ position: 'relative' }}>
             <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
@@ -215,7 +215,7 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="chart-card w-full overflow-x-auto">
+      <div className="chart-card" style={{ overflow: 'auto' }}>
         {loading ? (
           <div className="empty-state"><span>⏳</span><p>Memuat data...</p></div>
         ) : error ? (
