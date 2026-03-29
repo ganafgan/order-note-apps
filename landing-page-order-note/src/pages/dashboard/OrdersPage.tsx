@@ -20,7 +20,6 @@ export default function OrdersPage() {
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   
   // Filters state
   const [filterMonth, setFilterMonth] = useState('');
@@ -68,11 +67,7 @@ export default function OrdersPage() {
     .filter((order) => 
       order.customerName.toLowerCase().includes(searchTerm.toLowerCase())
     )
-    .sort((a, b) => {
-      const dateA = new Date(a.createdAt).getTime();
-      const dateB = new Date(b.createdAt).getTime();
-      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-    });
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   const handleDelete = async () => {
     try {
@@ -196,26 +191,10 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      <div className="filters-container">
-        <div className="filters-header">
-          <span className="filters-header-title">🔍 Filter & Pencarian</span>
-          {activeFiltersCount > 0 && (
-            <div className="filter-tag">
-              {activeFiltersCount} Filter Aktif
-              <button onClick={resetFilters} title="Reset">✕</button>
-            </div>
-          )}
-          <button 
-            className="link-btn" 
-            style={{ fontSize: '0.8rem', color: 'var(--clr-primary)', fontWeight: 600 }}
-            onClick={() => setShowAdvanced(!showAdvanced)}
-          >
-            {showAdvanced ? '⬆️ Sembunyikan Filter' : '⚙️ Filter Lanjutan'}
-          </button>
-        </div>
-
-        <div className="filters-body">
-          <div className="filter-group-row">
+      <div className="filters-container" style={{ borderRadius: 'var(--radius-lg)', padding: '20px' }}>
+        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', flex: 1 }}>
             <div className="filter-item">
               <label className="filter-label">Cari Pelanggan</label>
               <div className="filter-input-wrapper">
@@ -223,19 +202,21 @@ export default function OrdersPage() {
                 <input
                   type="text"
                   placeholder="Ketik nama pelanggan..."
-                  className="form-control"
+                  className="form-control hover-border"
+                  style={{ borderRadius: 'var(--radius-md)' }}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="filter-item medium">
-              <label className="filter-label">Pilih Bulan</label>
+            <div className="filter-item small">
+              <label className="filter-label">Bulan</label>
               <div className="filter-input-wrapper">
                 <span className="filter-icon">🗓️</span>
                 <select 
-                  className="form-control"
+                  className="form-control hover-border"
+                  style={{ borderRadius: 'var(--radius-md)' }}
                   value={filterMonth}
                   onChange={(e) => {
                     setFilterMonth(e.target.value);
@@ -243,60 +224,71 @@ export default function OrdersPage() {
                     setFilterEndDate('');
                   }}
                 >
-                  <option value="">Semua Bulan</option>
+                  <option value="">Semua</option>
                   {months.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
                 </select>
               </div>
             </div>
-
-            <button 
-              className="btn btn-secondary" 
-              onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-              style={{ height: 44, padding: '0 20px', borderRadius: 'var(--radius-sm)', display: 'flex', gap: 10, alignItems: 'center' }}
-            >
-              <span style={{ fontSize: '1.1rem' }}>{sortOrder === 'desc' ? '🔽' : '🔼'}</span>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{sortOrder === 'desc' ? 'Terbaru' : 'Terlama'}</span>
-            </button>
-          </div>
-
-          {showAdvanced && (
-            <div className="filter-group-row" style={{ paddingTop: 20, borderTop: '1px solid var(--clr-bg-alt)' }}>
-              <div className="filter-item small">
-                <label className="filter-label">Dari Tanggal</label>
-                <div className="filter-input-wrapper">
-                  <span className="filter-icon">📅</span>
-                  <input 
-                    type="date" 
-                    className="form-control" 
-                    value={filterStartDate}
-                    onChange={(e) => {
-                      setFilterStartDate(e.target.value);
-                      setFilterMonth('');
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="filter-item small">
-                <label className="filter-label">Sampai Tanggal</label>
-                <div className="filter-input-wrapper">
-                  <span className="filter-icon">📅</span>
-                  <input 
-                    type="date" 
-                    className="form-control"
-                    value={filterEndDate}
-                    onChange={(e) => {
-                      setFilterEndDate(e.target.value);
-                      setFilterMonth('');
-                    }}
-                  />
-                </div>
-              </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--clr-text-muted)', marginBottom: 12, fontStyle: 'italic' }}>
-                * Filter rentang tanggal akan mengabaikan filter bulan.
-              </p>
+            
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: 12 }}>
+              <button 
+                className="btn btn-secondary" 
+                style={{ height: 44, borderRadius: 'var(--radius-md)', padding: '0 16px', display: 'flex', alignItems: 'center', gap: 8 }}
+                onClick={() => setShowAdvanced(!showAdvanced)}
+              >
+                <span>{showAdvanced ? '⬆️' : '⚙️'}</span>
+                {showAdvanced ? 'Tutup Rentang' : 'Rentang Waktu'}
+              </button>
+              
+              {activeFiltersCount > 0 && (
+                <button 
+                  className="link-btn"
+                  style={{ height: 44, color: 'var(--clr-danger)', fontWeight: 600, fontSize: '0.85rem' }}
+                  onClick={resetFilters}
+                >
+                  ✕ Reset
+                </button>
+              )}
             </div>
-          )}
+          </div>
         </div>
+
+        {showAdvanced && (
+          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: 16, paddingTop: 16, borderTop: '1px dashed var(--clr-border)' }}>
+            <div className="filter-item small">
+              <label className="filter-label">Dari Tanggal</label>
+              <div className="filter-input-wrapper">
+                <span className="filter-icon">📅</span>
+                <input 
+                  type="date" 
+                  className="form-control hover-border" 
+                  style={{ borderRadius: 'var(--radius-md)' }}
+                  value={filterStartDate}
+                  onChange={(e) => {
+                    setFilterStartDate(e.target.value);
+                    setFilterMonth('');
+                  }}
+                />
+              </div>
+            </div>
+            <div className="filter-item small">
+              <label className="filter-label">Sampai Tanggal</label>
+              <div className="filter-input-wrapper">
+                <span className="filter-icon">📅</span>
+                <input 
+                  type="date" 
+                  className="form-control hover-border"
+                  style={{ borderRadius: 'var(--radius-md)' }}
+                  value={filterEndDate}
+                  onChange={(e) => {
+                    setFilterEndDate(e.target.value);
+                    setFilterMonth('');
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="chart-card" style={{ overflow: 'auto' }}>
